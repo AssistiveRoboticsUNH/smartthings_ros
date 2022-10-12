@@ -7,23 +7,25 @@ import os
 
 import rclpy
 from rclpy.node import Node
-from pioneer_shr_msg.msg import SmartSensor
+from std_msgs.msg import Bool
 
 
 class SmartthingsPublisher(Node):
 
     def __init__(self, smartthings_response, update_period):
         super().__init__('smartthings_publisher')
-        self.publisher_ = self.create_publisher(SmartSensor, 'smartthings_sensors', 10)
+        self.publisher_motion_door = self.create_publisher(Bool, 'smartthings_sensors_motion_door', 10)
+        self.publisher_motion_pills = self.create_publisher(Bool, 'smartthings_sensors_motion_pills', 10)
+        self.publisher_sensor_door = self.create_publisher(Bool, 'smartthings_sensors_door', 10)
         self.timer = self.create_timer(update_period, self.timer_callback)
         self.smartthings_response = smartthings_response
 
 
     def timer_callback(self):
         if self.smartthings_response.updated:
-            msg = SmartSensor()
-            msg.door_is_open = not self.smartthings_response.closed
-            self.publisher_.publish(msg)
+            msg = Bool()
+            msg.data = not self.smartthings_response.closed
+            self.publisher_sensor_door.publish(msg)
 
 
 class SmartthingsResponse:
