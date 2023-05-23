@@ -16,9 +16,10 @@ class SmartthingsPublisher(Node):
         super().__init__('smartthings_publisher')
         self.publisher_motion_door = self.create_publisher(Bool, 'smartthings_sensors_motion_door', 10)
         self.publisher_motion_pills = self.create_publisher(Bool, 'smartthings_sensors_motion_pills', 10)
+        self.publisher_motion_bedroom = self.create_publisher(Bool, 'smartthings_sensors_motion_bed_side', 10)
+        self.publisher_motion_eat = self.create_publisher(Bool, 'smartthings_sensors_motion_eat', 10)
+
         self.publisher_sensor_door = self.create_publisher(Bool, 'smartthings_sensors_door', 10)
-        #need new sensor for food
-        self.publisher_motion_eat = self.create_publisher(Bool, 'smartthings_sensors_eat', 10)
 
         self.timer = self.create_timer(update_period, self.timer_callback)
         self.smartthings_response = smartthings_response
@@ -26,23 +27,30 @@ class SmartthingsPublisher(Node):
     def timer_callback(self):
         if self.smartthings_response.updated:
             msg = Bool()
-            msg.data = not self.smartthings_response.closed
+            msg.data = not self.smartthings_response.door_sensor_closed
             self.publisher_sensor_door.publish(msg)
             msg = Bool()
-            msg.data = not self.smartthings_response.active_2
+            msg.data = not self.smartthings_response.door_motion_sensor_active
             self.publisher_motion_door.publish(msg)
             msg = Bool()
-            msg.data = not self.smartthings_response.active_1
+            msg.data = not self.smartthings_response.pill_motion_sensor_active
             self.publisher_motion_pills.publish(msg)
-
+            msg = Bool()
+            msg.data = not self.smartthings_response.dining_motion_sensor_active
+            self.publisher_motion_eat.publish(msg)
+            msg = Bool()
+            msg.data = not self.smartthings_response.bedroom_motion_sensor_active
+            self.publisher_motion_bedroom.publish(msg)
 
 
 class SmartthingsResponse:
     def __init__(self, update_period):
         self.updated = False
-        self.closed = None
-        self.active_1 = None
-        self.active_2 = None
+        self.door_sensor_closed = None
+        self.door_motion_sensor_active = None
+        self.pill_motion_sensor_active = None
+        self.dining_motion_sensor_active = None
+        self.bedroom_motion_sensor_active = None
         self.update_period = update_period
 
     async def print_devices(self):
@@ -53,27 +61,39 @@ class SmartthingsResponse:
             api = pysmartthings.SmartThings(session, token)
             devices = await api.devices()
             # devices_ = [motion-temp-battery, multi-sensor, motion-temp-battery]
-            devices_id = ['c5472f1f-c05f-4d16-bb11-dc645668568a', '70434ef2-10c7-425e-93bc-0495197817d7', 'b6b02811-f5d5-4c36-abb4-47d9206ffbb5']
+            # devices_id = ['c5472f1f-c05f-4d16-bb11-dc645668568a', '70434ef2-10c7-425e-93bc-0495197817d7',
+            #               'b6b02811-f5d5-4c36-abb4-47d9206ffbb5']
             # order = [motion_Sensor_1, door sensor, motion sensor 2]
             while True:
                 start = float(time.time_ns() // 1_000_000_000)
                 for device in devices:
-                    if device.device_id == devices_id[0]: #sensor_1
+                    print(device.label)
+
+                    if device.label == 'door_motion_sensor':  # sensor_1
+                        print('1')
                         await device.status.refresh()
-                        print('device id',device.name, device.status.values['motion'])
-                        self.active_1 = device.status.values['motion'] =='inactive'
-                    elif device.device_id == devices_id[1]: # door sensor
-                        print('name',device.name)
+                        print('device id', device.name, device.status.values['motion'])
+                        self.door_motion_sensor_active = device.status.values['motion'] == 'inactive'
+                    elif device.label == 'door_sensor':  # door sensor
+                        print('2')
                         await device.status.refresh()
-                        self.closed = device.status.values['contact'] == 'closed'           
-                    elif device.device_id == devices_id[2]: #sensor_2
+                        self.door_sensor_closed = device.status.values['contact'] == 'closed'
+                    elif device.label == 'dining_motion_sensor':  # sensor_2
                         await device.status.refresh()
-                        print('name',device.name,device.status.values['motion'])
-                        self.active_2 = device.status.values['motion'] =='inactive'
+                        print('3')
+                        self.dining_motion_sensor_active = device.status.values['motion'] == 'inactive'
+                    elif device.label == 'dining_motion_sensor':  # sensor_2
+                        await device.status.refresh()
+                        print('5')
+                        self.bedroom_motion_sensor_active = device.status.values['motion'] == 'inactive'
+                    elif device.label == 'pills_motion_sensor':  # sensor_2
+                        await device.status.refresh()
+                        print('6')
+                        self.pill_motion_sensor_active = device.status.values['motion'] == 'inactive'
+
                 end = float(time.time_ns() // 1_000_000_000)
                 await asyncio.sleep(self.update_period - (end - start))
                 self.updated = True
-
 
 def main(args=None):
     update_period = 1.5  # 1 sec
