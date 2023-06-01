@@ -82,7 +82,7 @@ class SmartthingsResponse:
                         await device.status.refresh()
                         print('3')
                         self.dining_motion_sensor_active = device.status.values['motion'] == 'inactive'
-                    elif device.label == 'dining_motion_sensor':  # sensor_2
+                    elif device.label == 'bedroom_motion_sensor':  # sensor_2
                         await device.status.refresh()
                         print('5')
                         self.bedroom_motion_sensor_active = device.status.values['motion'] == 'inactive'
