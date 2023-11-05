@@ -20,7 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'smartthings_node = smartthings_ros.smartthings_node_sensor:main'
+            'smartthings_node = smartthings_ros.smartthings_node_sensor:main',
+            'smartplug_node = smartthings_ros.smart_plug_sensor:main',
         ],
     },
 )
