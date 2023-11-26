@@ -7,7 +7,7 @@ import time
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Int32
-
+import os
 
 class SmartPlugPublisher(Node):
 
@@ -29,7 +29,8 @@ class SmartPlugPublisher(Node):
 class SmartPlugResponse:
     def __init__(self, update_period):
         self.updated = False
-        self.smart_plug = SmartPlug("192.168.1.44")
+        self.smart_plug = SmartPlug(os.environ.get("plug_ip"))
+
         self.powered = 0
 
         self.update_period = update_period
