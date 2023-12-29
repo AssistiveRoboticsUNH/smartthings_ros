@@ -39,7 +39,7 @@ class SmartPlugResponse:
         while True:
             start = float(time.time_ns() // 1_000_000_000)
             await self.smart_plug.update()
-            if (self.smart_plug.emeter_realtime.power > 3):
+            if (self.smart_plug.emeter_realtime.power > 10):
                 self.powered = 1
             else:
                 self.powered = 0
