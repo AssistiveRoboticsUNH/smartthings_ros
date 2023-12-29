@@ -1,11 +1,8 @@
 import rclpy
 from rclpy.node import Node
-import rclpy
-from rclpy.node import Node
 import numpy as np 
 from std_msgs.msg import Int32
 import cv2
-from matplotlib import pyplot as plt
 import os
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
@@ -13,7 +10,6 @@ import torch
 import torch.nn as nn
 import mediapipe as mp
 from collections import deque
-import torch.optim as optim
 import time
 
 

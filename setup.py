@@ -23,7 +23,7 @@ setup(
             'smartthings_node = smartthings_ros.smartthings_node_sensor:main',
             'smartthings_node_lab = smartthings_ros.smartthings_node_sensor_lab:main',
             'smartplug_node = smartthings_ros.smart_plug_sensor:main',
-            'activity_node = smartthings_ros.activity_recognation_node:main',
+            'activity_node = smartthings_ros.activity_recognition_node:main',
         ],
     },
 )
