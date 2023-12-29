@@ -19,7 +19,7 @@ class SmartthingsPublisher(Node):
         self.publisher_pills_motion_sensor = self.create_publisher(Int32, 'person_taking_medicine', 10)
         # self.publisher_bedroom_motion_sensor = self.create_publisher(Bool, 'smartthings_bedroom_motion_sensor', 10)
         # self.publisher_bathroom_motion_sensor = self.create_publisher(Bool, 'smartthings_bathroom_motion_sensor', 10)
-        # self.publisher_dining_motion_sensor = self.create_publisher(Bool, 'smartthings_dining_motion_sensor', 10)
+        self.publisher_dining_motion_sensor = self.create_publisher(Bool, '/person_eating', 10)
 
         self.publisher_bedroom_sensor_door = self.create_publisher(Bool, 'smartthings_sensors_door_bedroom', 10)
         # self.publisher_living_sensor_door = self.create_publisher(Bool, 'smartthings_living_sensor_door', 10)
@@ -51,9 +51,9 @@ class SmartthingsPublisher(Node):
             msg = Int32()
             msg.data = int(not self.smartthings_response.pills_motion_sensor_inactive)
             self.publisher_pills_motion_sensor.publish(msg)
-            # msg = Bool()
-            # msg.data = not self.smartthings_response.dining_motion_sensor_active
-            # self.publisher_dining_motion_sensor.publish(msg)
+            msg = Int32()
+            msg.data = int(not self.smartthings_response.dining_motion_sensor_active)
+            self.publisher_dining_motion_sensor.publish(msg)
             # msg = Bool()
             # msg.data = not self.smartthings_response.bedroom_motion_sensor_active
             # self.publisher_bedroom_motion_sensor.publish(msg)
@@ -73,7 +73,7 @@ class SmartthingsResponse:
 
         # self.door_motion_sensor_active = None
         self.pills_motion_sensor_inactive = None
-        # self.dining_motion_sensor_active = None
+        self.dining_motion_sensor_active = None
         # self.bedroom_motion_sensor_active = None
         # self.bathroom_motion_sensor_action = None
 
@@ -117,10 +117,10 @@ class SmartthingsResponse:
                         self.main_door_sensor_closed = device.status.values['contact'] == 'closed'
 
                     # # motion sensor
-                    # elif device.label == 'dining_motion_sensor':  # sensor_2
-                    #     await device.status.refresh()
-                    #     print('dining_motion 5', device.status.values['motion'])
-                    #     self.dining_motion_sensor_active = device.status.values['motion'] == 'inactive'
+                    elif device.label == 'dining_motion_sensor':  # sensor_2
+                        await device.status.refresh()
+                        print('dining_motion 5', device.status.values['motion'])
+                        self.dining_motion_sensor_active = device.status.values['motion'] == 'inactive'
                     #
                     # elif device.label == 'bedroom_motion_sensor':  # sensor_2
                     #     await device.status.refresh()
