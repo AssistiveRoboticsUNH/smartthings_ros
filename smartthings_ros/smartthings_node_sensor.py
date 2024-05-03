@@ -57,7 +57,7 @@ class SmartthingsPublisher(Node):
             
             msg = Int32()
             msg.data = int(not self.smartthings_response.dining_motion_sensor_active)
-            self.publisher_dining_motion_sensor.publish(msg)
+            # self.publisher_dining_motion_sensor.publish(msg)
             
             # msg = Bool()
             # msg.data = not self.smartthings_response.bedroom_motion_sensor_active
