@@ -21,7 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'smartthings_node = smartthings_ros.smartthings_node_sensor:main',
-            'smartthings_node_lab = smartthings_ros.smartthings_node_sensor_lab:main',
+            #'smartthings_node_lab = smartthings_ros.smartthings_node_sensor_lab:main',
             'smartplug_node = smartthings_ros.smart_plug_sensor:main',
             'activity_node = smartthings_ros.activity_recognition_node:main',
 	        'initial_pose = smartthings_ros.initial_position_node:main',
