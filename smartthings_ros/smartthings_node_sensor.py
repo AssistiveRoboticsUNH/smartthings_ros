@@ -36,7 +36,7 @@ class SmartthingsPublisher(Node):
             msg.data = not self.smartthings_response.bedroom_door_sensor_closed
             self.publisher_bedroom_sensor_door.publish(msg)
             
-            print("i am calling")
+            #print("i am calling")
             # msg = Bool()
             # msg.data = not self.smartthings_response.livingroom_door_sensor_closed
             # self.publisher_living_smartthings_sensors_door_outdoorsensor_door.publish(msg)
@@ -91,6 +91,8 @@ class SmartthingsResponse:
         async with aiohttp.ClientSession() as session:
             api = pysmartthings.SmartThings(session, token)
             devices = await api.devices()
+            print(len(devices))
+
             # devices_ = [motion-temp-battery, multi-sensor, motion-temp-battery]
             # devices_id = ['c5472f1f-c05f-4d16-bb11-dc645668568a', '70434ef2-10c7-425e-93bc-0495197817d7',
             #               'b6b02811-f5d5-4c36-abb4-47d9206ffbb5']
@@ -99,44 +101,56 @@ class SmartthingsResponse:
                 start = float(time.time_ns() // 1_000_000_000)
                 for device in devices:
                     print(device.label)
+                    # for x in range(len(devices)):
+                    #     device = devices[x]
+                        # print(device.device_id)
+                        # print(device.name)
+                        #print(device.label)
+                        # await device.status.refresh()
+                        # print(device.status.values)
+                        # print(device.status.switch)
+                        # print(device.status.level)
 
                     # door sensor
-                    if device.label == 'bedroom_sensor_door':  # bedroom door sensor check
-                        print('bedroom_door 1', device.status.values['contact'])
+                    if device.label == 'bedroom_sensor_door_hub2':  # bedroom door sensor check
+                        #print('bedroom_door 1', device.status.values['contact'])
                         await device.status.refresh()
                         self.bedroom_door_sensor_closed = device.status.values['contact'] == 'closed'
-
+                        print('bedroom_sensor_door', device.status.values['contact'])
                     # elif device.label == 'livingroom_sensor_door':  # livingroom door sensor check
                     #     print('livingroom_door 2', device.status.values['contact'])
                     #     await device.status.refresh()
                     #     self.livingroom_door_sensor_closed = device.status.values['contact'] == 'closed'
 
-                    elif device.label == 'bathroom_sensor_door':  # bathroom door sensor
-                        print('bathroom_door 3', device.status.values['contact'])
+                    elif device.label == 'bathroom_sensor_door_hub2':  # bathroom door sensor
+                        #print('bathroom_door 3', device.status.values['contact'])
                         await device.status.refresh()
                         self.bathroom_door_sensor_closed = device.status.values['contact'] == 'closed'
+                        print('bathroom_sensor_door', device.status.values['contact'])
 
-                    elif device.label == 'main_sensor_door':  # main door sensor
-                        print('main_door 4', device.status.values['motion'])
+                    elif device.label == 'main_sensor_door_hub2':  # main door sensor
+                        #print('main_door 4', device.status.values['contact'])
                         await device.status.refresh()
                         self.main_door_sensor_closed = device.status.values['contact'] == 'closed'
+                        print('main_door_sensor_door', device.status.values['contact'])
 
                     # # motion sensor
                     elif device.label == 'dining_motion_sensor':  # sensor_2
                         await device.status.refresh()
-                        print('dining_motion 5', device.status.values['motion'])
+                        #print('dining_motion 5', device.status.values['motion'])
                         self.dining_motion_sensor_active = device.status.values['motion'] == 'inactive'
+                        print('dining_motion_sensor_active', device.status.values['motion'])
                     #
                     # elif device.label == 'bedroom_motion_sensor':  # sensor_2
                     #     await device.status.refresh()
                     #     print('bedroom_motion_sensor', device.status.values['motion'])
                     #     self.bedroom_motion_sensor_active = device.status.values['motion'] == 'inactive'
 
-                    elif device.label == 'pills_motion_sensor':  # sensor_2
+                    elif device.label == 'pills_motion_sensor_hub2':  # sensor_2
                         await device.status.refresh()
-                        print('pills_motion 7,', device.status.values['motion'])
+                        #print('pills_motion 7,', device.status.values['motion'])
                         self.pills_motion_sensor_inactive = device.status.values['motion'] == 'inactive'
-
+                        print('pills_motion_sensor_active', device.status.values['motion'])
                     # elif device.label == 'bathroom_motion_sensor':  # sensor_2
                     #     await device.status.refre/person_eatingsh()
                     #     print('bathroom_motion 8', device.status.values['motion'])
