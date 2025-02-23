@@ -24,7 +24,8 @@ class SerialDataPublisher(Node):
                     bump_msg.data = bump_value
                     self.bump_pub.publish(bump_msg)
             except (ValueError, IndexError) as e:
-                self.get_logger().error("Error parsing serial data: %s", str(e))
+                self.get_logger().error(f"Error parsing serial data: {str(e)}")
+
 
 def find_arduino_nano_port(baudrate, vid, pid, serial_number=None):
     # List all available serial ports
@@ -50,7 +51,7 @@ def main(args=None):
     # Replace these with the specific VID, PID, and serial number of your Arduino Nano
     arduino_nano_vid = 0x0403  # Example VID for FT232R USB UART
     arduino_nano_pid = 0x6001  # Example PID for FT232R USB UART
-    arduino_nano_serial = "A10LSJN1"  # Your Arduino's serial number
+    arduino_nano_serial = "AQ02T6IH"  # Your Arduino's serial number
 
     try:
         # Find the Arduino Nano port

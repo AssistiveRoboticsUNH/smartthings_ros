@@ -27,6 +27,8 @@ setup(
             'activity_node = smartthings_ros.activity_recognition_node:main',
 	        'initial_pose = smartthings_ros.initial_position_node:main',
             'bump_sensor = smartthings_ros.arduino_sensor:main',
+            'weather_node = smartthings_ros.weather_publisher_node:main',
+
 
         ],
     },
