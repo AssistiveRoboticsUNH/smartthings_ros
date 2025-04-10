@@ -37,15 +37,26 @@ class SmartPlugResponse:
 
     async def read_device(self):
         while True:
-            start = float(time.time_ns() // 1_000_000_000)
-            await self.smart_plug.update()
-            if (self.smart_plug.emeter_realtime.power > 10):
-                self.powered = 1
+            start = time.time()
+            try:
+                await self.smart_plug.update()
+                if self.smart_plug.emeter_realtime.power > 15:
+                    self.powered = 1
+                else:
+                    self.powered = 0
+                self.updated = True
+            except Exception as e:
+                print(f"[SmartPlug] Failed to update: {e}")
+                self.updated = False
+                self.powered = 0  # optional: set to 0 if unreachable
+            
+            end = time.time()
+            sleep_duration = self.update_period - (end - start)
+            if sleep_duration > 0:
+                await asyncio.sleep(sleep_duration)
             else:
-                self.powered = 0
-            end = float(time.time_ns() // 1_000_000_000)
-            await asyncio.sleep(self.update_period - (end - start))
-            self.updated = True
+                await asyncio.sleep(0.1)  # fallback delay if processing is slow
+
 
 
 def main(args=None):
