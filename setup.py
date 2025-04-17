@@ -29,6 +29,7 @@ setup(
             'bump_sensor = smartthings_ros.arduino_sensor:main',
             'weather_node = smartthings_ros.weather_publisher_node:main',
             'display_node = smartthings_ros.display_node:main',
+            'display_ack = smartthings_ros.display_ack:main',
 
         ],
     },
